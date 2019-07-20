@@ -35,13 +35,16 @@ def filter(zipper):
 appending to take those filtered filenames and tack them onto the end:
 ---------------------
 def appending():
-	append.sort() # this is screwing it up because append is a list of strings, not a list of integers
-	starting_point = len(files_to_number) + len(append)
-	for x in reversed(append):
-		new_name = str(starting_point) + '.' + x.split('.')[-1:]
+	clone = append.copy()
+	fixed = [x[1] for x in sorted([tuple([int(x.split('.')[0]), x]) for x in clone])]
+	starting_point = len(files_to_number) + len(fixed) - 1
+	for x in reversed(fixed):
+		new_name = str(starting_point) + '.' + str(x.split('.')[-1:]).strip('[').strip(']').strip("'")
 		command = 'mv "' + x + '" ' + new_name
 		print(command)
+		os.popen(command)
 		starting_point -= 1
+
 ---------------------
 try_this to take the remaining files and give them ordered names:
 ---------------------
