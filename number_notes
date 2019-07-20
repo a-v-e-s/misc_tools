@@ -1,0 +1,54 @@
+rename these things so it doesn't look/sound goofy and makes more sense.
+you're naming things after built-ins: BAD
+---------------------
+import os
+
+os.chdir(directory)
+files_to_number = os.listdir()
+numbered, zipper = redo(files_to_number)
+append = []
+append, numbered, zipper = filter(zipper)
+appending()
+try_this()
+---------------------
+redo function to set/reset numbered and zipper objects:
+---------------------
+def redo(files_to_number):
+	numbered = enumerate(files_to_number)
+	zipper = zip(numbered, files_to_number)
+	return numbered, zipper
+---------------------
+filter to remove filenames that are in the way and set them aside, then reset the numbered and zipper objects:
+---------------------
+def filter(zipper):
+	for x in zipper:
+		try:
+			if int(str(x[1].split('.')[:-1]).strip('[').strip(']').strip("'")) in list(range(1, len(files_to_number) + 1)):
+				append.append(x[1])
+		except ValueError:
+			pass
+	for x in append:
+		files_to_number.remove(x)
+	numbered, zipper = redo(files_to_number)
+	return append, numbered, zipper
+---------------------
+appending to take those filtered filenames and tack them onto the end:
+---------------------
+def appending():
+	append.sort() # this is screwing it up because append is a list of strings, not a list of integers
+	starting_point = len(files_to_number) + len(append)
+	for x in reversed(append):
+		new_name = str(starting_point) + '.' + x.split('.')[-1:]
+		command = 'mv "' + x + '" ' + new_name
+		print(command)
+		starting_point -= 1
+---------------------
+try_this to take the remaining files and give them ordered names:
+---------------------
+def try_this():
+	for x in zipper:
+            old_name = str(x[1])		    
+            new_name = (str(x[0][0]) + '.' + str(x[0][1].split('.')[-1:]).strip('[').strip(']').strip("'"))
+            command = 'mv "' + old_name + '" ' + new_name
+            print(command)
+            os.popen(command)

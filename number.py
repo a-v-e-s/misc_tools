@@ -40,33 +40,48 @@ def main(repeat=0):
             else:
                 files_to_number.append(y)
 
-        already_done = []
-        for a in files_to_number:
-            try:
-                name = int(str(a.split('.')[:1]).strip("[']"))
-                if name in range(1, len(files_to_number)):
-                    already_done.append(a)
-                    continue
-            except ValueError:
-                pass
-
-        for a in already_done:
-            files_to_number.remove(a)
+#        already_done = []
+#        numbers_to_skip = []
+#        for a in files_to_number:
+#            try:
+#                name = int(str(a.split('.')[:1]).strip("[']"))
+#                if name in range(1, len(files_to_number)):
+#                    already_done.append(a)
+#                    numbers_to_skip.append(name)
+#                    continue
+#            except ValueError:
+#                pass
+#
+#        for a in already_done:
+#            files_to_number.remove(a)
 
         os.chdir(x)
-        index = 1
-        for a in files_to_number:
-            while True:
-                new_name = str(index) + '.' + str(a.split('.')[-1:]).strip("[']")
-                if new_name in already_done:
-                    index += 1
-                else:
-                    break
-            
-            command = 'mv "' + a + '" ' + new_name
+        numbered = enumerate(files_to_number)
+        zipper = zip(numbered, files_to_number)
+        for x in zipper:
+            new_name = (str(x[0][0]) + '.' +
+                str(x[0][1].split('.')[-1:]).strip('[').strip(']').strip("'"))
+            old_name = str(x[1])
+            command = 'mv "' + old_name + '" ' + new_name
             os.popen(command)
-            print('Renamed', a, 'to', new_name)
-            index += 1
+
+#        os.chdir(x)
+#        index = 1
+#        for a in files_to_number:
+#            while True:
+#                if index in numbers_to_skip:
+#                    index += 1
+#                    continue
+#                new_name = str(index) + '.' + str(a.split('.')[-1:]).strip("[']")
+#                if new_name in already_done:
+#                    index += 1
+#                else:
+#                    break
+            
+#            command = 'mv "' + a + '" ' + new_name
+#            os.popen(command)
+#            print('Renamed', a, 'to', new_name)
+#            index += 1
 
     if input('\nGo again? [y/n]\n').lower() == 'y':
         main(repeat=1)
