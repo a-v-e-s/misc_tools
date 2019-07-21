@@ -1,10 +1,18 @@
 """
 number.py: A crude script for numbering and renaming the files in one or more directories
+Has bugs, and sometimes overwrites files. Still being developed.
+Don't use on anything important.
+
 Written by: Jon David Tannehill
 """
 
 import os, sys, argparse
 
+
+def zip_it(files_to_number):
+    numbered = enumerate(files_to_number)
+    zipper = zip(numbered, files_to_number)
+    return numbered, zipper
 
 def main(repeat=0):
     directory_list = []
@@ -30,58 +38,47 @@ def main(repeat=0):
 
     for x in directory_list:
 
+        os.chdir(x)
+
         files_to_number = []
-        for y in os.listdir(x):
-            if len(extensions) > 0:
+        if len(extensions) > 0:
+            for y in os.listdir():
                 for z in extensions:
                     if y.endswith(z):
                         files_to_number.append(y)
                         break
-            else:
-                files_to_number.append(y)
+        else:
+            files_to_number = os.listdir()
 
-#        already_done = []
-#        numbers_to_skip = []
-#        for a in files_to_number:
-#            try:
-#                name = int(str(a.split('.')[:1]).strip("[']"))
-#                if name in range(1, len(files_to_number)):
-#                    already_done.append(a)
-#                    numbers_to_skip.append(name)
-#                    continue
-#            except ValueError:
-#                pass
-#
-#        for a in already_done:
-#            files_to_number.remove(a)
+        numbered, zipper = zip_it(files_to_number)
 
-        os.chdir(x)
-        numbered = enumerate(files_to_number)
-        zipper = zip(numbered, files_to_number)
-        for x in zipper:
-            new_name = (str(x[0][0]) + '.' +
-                str(x[0][1].split('.')[-1:]).strip('[').strip(']').strip("'"))
-            old_name = str(x[1])
-            command = 'mv "' + old_name + '" ' + new_name
+        append = []
+        for y in zipper:
+            try:
+                if int(str(y[1].split('.')[:-1]).strip('[').strip(']').strip("'")) in list(range(1, len(files_to_number) + 1)):
+                    append.append(y[1])
+            except ValueError:
+                pass
+        for z in append:
+            files_to_number.remove(z)
+        numbered, zipper = zip_it(files_to_number)
+
+        clone = append.copy()
+        fixed = [a[1] for a in sorted([tuple([int(a.split('.')[0]), a]) for a in clone])]
+        starting_point = len(files_to_number) + len(fixed) - 1
+        for b in reversed(fixed):
+            new_name = str(starting_point) + '.' + str(b.split('.')[-1:]).strip('[').strip(']').strip("'")
+            command = 'mv "' + b + '" ' + new_name
+            print(command)
             os.popen(command)
+            starting_point -= 1
 
-#        os.chdir(x)
-#        index = 1
-#        for a in files_to_number:
-#            while True:
-#                if index in numbers_to_skip:
-#                    index += 1
-#                    continue
-#                new_name = str(index) + '.' + str(a.split('.')[-1:]).strip("[']")
-#                if new_name in already_done:
-#                    index += 1
-#                else:
-#                    break
-            
-#            command = 'mv "' + a + '" ' + new_name
-#            os.popen(command)
-#            print('Renamed', a, 'to', new_name)
-#            index += 1
+        for c in zipper:
+            old_name = str(c[1])		    
+            new_name = (str(c[0][0]) + '.' + str(c[0][1].split('.')[-1:]).strip('[').strip(']').strip("'"))
+            command = 'mv "' + old_name + '" ' + new_name
+            print(command)
+            os.popen(command)
 
     if input('\nGo again? [y/n]\n').lower() == 'y':
         main(repeat=1)
