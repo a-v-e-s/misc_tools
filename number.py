@@ -9,11 +9,6 @@ Written by: Jon David Tannehill
 import os, sys, argparse
 
 
-def zip_it(files_to_number):
-    numbered = enumerate(files_to_number)
-    zipper = zip(numbered, files_to_number)
-    return numbered, zipper
-
 def main(repeat=0):
     directory_list = []
     extensions = []
@@ -50,24 +45,28 @@ def main(repeat=0):
         else:
             files_to_number = os.listdir()
 
-        numbered, zipper = zip_it(files_to_number)
+        zipper = zip(enumerate(files_to_number), files_to_number)
 
-        append = []
+        tail = []
         for y in zipper:
             try:
-                if int(str(y[1].split('.')[:-1]).strip('[').strip(']').strip("'")) in list(range(1, len(files_to_number) + 1)):
-                    append.append(y[1])
+                if int(str(y[1].split('.')[:-1]).strip('[').strip(']').strip("'").lstrip('0')) in list(range(1, len(files_to_number) + 1)):
+                    tail.append(y[1])
             except ValueError:
                 pass
-        for z in append:
-            files_to_number.remove(z)
-        numbered, zipper = zip_it(files_to_number)
+        for y in tail:
+            files_to_number.remove(y)
+        zipper = zip(enumerate(files_to_number), files_to_number)
 
-        clone = append.copy()
+        clone = tail.copy()
         fixed = [a[1] for a in sorted([tuple([int(a.split('.')[0]), a]) for a in clone])]
         starting_point = len(files_to_number) + len(fixed) - 1
+
         for b in reversed(fixed):
             new_name = str(starting_point) + '.' + str(b.split('.')[-1:]).strip('[').strip(']').strip("'")
+            if new_name in os.listdir():
+                print('\n' + b + ' alread present, skipping,,,\n')
+                continue
             command = 'mv "' + b + '" ' + new_name
             print(command)
             os.popen(command)
@@ -76,6 +75,9 @@ def main(repeat=0):
         for c in zipper:
             old_name = str(c[1])		    
             new_name = (str(c[0][0]) + '.' + str(c[0][1].split('.')[-1:]).strip('[').strip(']').strip("'"))
+            if new_name in os.listdir():
+                print('\n' + new_name + ' already present, skipping...\n')
+                continue
             command = 'mv "' + old_name + '" ' + new_name
             print(command)
             os.popen(command)
