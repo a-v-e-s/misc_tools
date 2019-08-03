@@ -5,46 +5,46 @@ Does what I want it to do for now.
 Likely to be upgraded in the future.
 """
 
-import os, sys, re, mechanicalsoup
+import os, sys, re, functools, mechanicalsoup
+import tkinter as tk
+from tkinter.filedialog import askdirectory
 
 Bowser = mechanicalsoup.StatefulBrowser()
 pattern = re.compile('href=["|\'][^"\']*["|\']')
 
 
-def main():
-    url = input('\nEnter the url you wish to scrape linked files from:\n')
-    filetypes = input('\nEnter a space separated list of the extensions for all filetypes you wish to scrape:\n').split(' ')
-    
-    while True:
-        directory = input('\nEnter the full path to the directory you would like to save the downloads to:\n')
-        if os.path.isdir(directory):
-            os.chdir(directory)
-            break
-        elif os.path.isdir(os.path.split(directory)[0]):
-            os.chdir(os.path.split(directory)[0])
-            print('\nCreating directory ' + os.path.split(directory)[1])
-            os.mkdir(os.path.split(directory)[1])
-            os.chdir(os.path.split(directory)[1])
-            break
-        else:
-            print('\nInvalid directory path. Try again!\n')
-    
+def main(ur, exts, dir):
+    url, filetypes, directory = ur.get(), exts.get(), dir.get()
     Bowser.open(url)
 
+    extensions = filetypes.split()
     for x in Bowser.links():
         link = re.search(pattern, str(x)).group()[6:-1]
-        for y in filetypes:
+        for y in extensions:
             if link.endswith(y):
                 print('Downloading: ' + link)
                 try:
-                    Bowser.download_link(link, os.path.join(os.getcwd(), os.path.split(link)[1]))
+                    Bowser.download_link(link, os.path.join(directory, os.path.split(link)[1]))
                 except Exception:
                     print(sys.exc_info())
                 break
 
-    if input('\nGo again? [y/n]\n').lower() == 'y':
-        main()
+root = tk.Tk()
+filetypes = tk.StringVar()
+url = tk.StringVar()
+directory = tk.StringVar()
+tk.Label(root, text='Enter URL here:').grid(row=1, column=1, columnspan=2)
+ur = tk.Entry(root, width=80, textvariable=url)
+ur.grid(row=2, column=1, columnspan=2)
+tk.Label(root, text='Enter file extensions to download here:').grid(row=3, column=1, columnspan=2)
+ext = tk.Entry(root, width=80, textvariable=filetypes)
+ext.grid(row=4, column=1, columnspan=2)
+tk.Label(root, text='Folder to save files in:').grid(row=5, column=1, columnspan=2)
+dir = tk.Entry(root, width=80, textvariable=directory)
+dir.grid(row=6, column=1)
+tk.Button(root, text='Browse', command=(lambda x=dir:[x.delete(0, len(x.get())), x.insert(0, askdirectory())])).grid(row=6, column=2)
 
-
+tk.Button(root, text='Scrape!', command=functools.partial(main, url, filetypes, directory)).grid(row=7, column=1, columnspan=2)
+root.bind(sequence='<Return>', func=(lambda x: main(url, filetypes, directory)))
 if __name__ == '__main__':
-    main()
+    root.mainloop()
