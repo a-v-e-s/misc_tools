@@ -9,18 +9,21 @@ Written by: Jon David Tannehill
 import os, sys, argparse
 
 
-def main(repeat=0):
+def number(directory=None, filetypes=None, repeat=0):
     directory_list = []
     extensions = []
 
-    if len(sys.argv) == 1 or repeat:
+    if directory:
+        directory_list.append(directory)
+        if filetypes:
+            extensions = filetypes
+    elif len(sys.argv) == 1 or repeat:
         directory_list = [x for x in input('\nEnter the directory or directories whose files you want to number separated by spaces:\n').split() if os.path.isdir(x)]
         extensions = [x for x in input('\nEnter a space-separated list of the extensions for the file types you wish to have numbered Leave blank to include all files:\n').split() if len(x) > 0]
     else:
         parser = argparse.ArgumentParser()
         parser.add_argument('directories', type=str, nargs='*', metavar='/path/to/directory1 /path/to/directory2', help='Enter a space-separated list of the full paths to directories whose files you wish to have numbered')
         parser.add_argument('-e', action='store', dest='e', nargs='*', help='Optionally, enter a space separated-list of the file extensions whose files you wish to have numbered.\nExample:\njpg wmv mp4 mp3 doc')
-
         args = parser.parse_args()
         for x in args.directories:
             if os.path.isdir(x):
@@ -82,9 +85,10 @@ def main(repeat=0):
             print(command)
             os.popen(command)
 
-    if input('\nGo again? [y/n]\n').lower() == 'y':
-        main(repeat=1)
+    if number == 0:
+        if input('\nGo again? [y/n]\n').lower() == 'y':
+            number(repeat=1)
 
 
 if __name__ == '__main__':
-    main()
+    number()
