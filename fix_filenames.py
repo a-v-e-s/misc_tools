@@ -26,7 +26,7 @@ def fix_filenames(directory, recursive=False, subdirs=False):
                         os.rename(os.path.join(root, y), os.path.join(root, new_name))
     else:
         for x in os.listdir(directory):
-            if subdirs == True or os.path.isfile(x):
+            if subdirs == True or os.path.isfile(os.path.join(directory, x)):
                 if re.search(pattern, x):
                     new_name = re.sub(pattern, '_', x)
                     os.rename(os.path.join(directory, x), os.path.join(directory, new_name))
@@ -59,8 +59,10 @@ if __name__ == '__main__':
             subdirs = True
     #
     else:
+        directory = args.directory
         if args.recursive != False:
             recursive = True
         if args.subdirs != False:
             subdirs = True
+    #
     fix_filenames(directory, recursive, subdirs)
