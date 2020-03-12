@@ -2,9 +2,9 @@ from multiprocessing import Process, cpu_count
 from threading import Thread
 from time import sleep
 
-def weaver(targets, args, separate=True):
+def weaver(targets, args, separate=True, leave_idle=1):
     cpus = cpu_count()
-    cpus_to_use = cpus - 1 if cpus > 2 else 1
+    cpus_to_use = cpus - leave_idle if cpus > 2 else 1
     jobs = []
     count = 0
     for x in targets:
