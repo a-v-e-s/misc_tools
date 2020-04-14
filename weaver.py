@@ -3,6 +3,9 @@ from threading import Thread
 from time import sleep
 
 def weaver(targets, args, separate=True, leave_idle=1):
+    """
+    Documentation:
+    """
     cpus = cpu_count()
     cpus_to_use = cpus - leave_idle if cpus > 1 else 1
     jobs = []
@@ -20,6 +23,10 @@ def weaver(targets, args, separate=True, leave_idle=1):
         try:
             jobs[x].start()
             running_jobs.append(jobs[x])
+        except IndexError:
+            break
+    for x in range(cpus_to_use):
+        try:
             jobs.remove(jobs[x])
         except IndexError:
             break
