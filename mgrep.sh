@@ -13,7 +13,7 @@ while getopts ":o:" x; do
 done
 shift $((OPTIND-1))
 
-man_path=`manpath | tr -d ":"`
+man_path=`manpath | tr ":" " "`
 
 for i in $man_path; do
     ls -LR $i 2>/dev/null | col >> /tmp/man_files.$$
