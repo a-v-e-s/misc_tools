@@ -13,7 +13,7 @@ while getopts ":o:" x; do
 done
 shift $((OPTIND-1))
 
-man_path=`manpath | tr ":" " "`
+man_path=`manpath | tr -d ":"`
 
 for i in $man_path; do
     ls -LR $i 2>/dev/null | col >> /tmp/man_files.$$
@@ -22,7 +22,7 @@ done
 index=0
 declare -a results
 while read line; do
-    name=`echo $line | tr ":" ""` # wtf is the problem with this line?
+    name=`echo $line | tr -d ":"` # wtf is the problem with this line?
     if [[ -d $name ]]; then
         dir=$name
     elif [[ -n `echo "$name" | grep "$1"` ]]; then
