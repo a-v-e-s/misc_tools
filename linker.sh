@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# This script gets all the scripts found anywhere
-# within a directory or any of its subdirectories
-# and creates symbolic links to them in 
-# a single, convenient directory.
+# This script gets all the scripts starting with a shebang (#!)
+# found anywhere within a directory or any of its subdirectories
+# and creates symbolic links to them in a single, convenient directory.
 #
 # It also adds execute permissions for user and group
 # if they are not already present.
