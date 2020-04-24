@@ -63,6 +63,7 @@ while read line; do
 # we send those warnings into a black hole here:
 done < /tmp/linker.$$ 2>/dev/null
 
+rm /tmp/linker.$$
 echo -e "\nDone!\n"
 
 exit 0
