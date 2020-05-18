@@ -48,6 +48,8 @@ while read line; do
 			fn="$dir"/"$line"
 			if [[ -d "$fn" ]]; then
 				continue
+			elif [[ ! -f "$fn" ]]; then
+				continue
 			elif [[ `head -n 1 "$fn"` =~ ^#! ]]; then
 				# Make sure the file is executable
 				if [[ ! -x "$fn" ]]; then
