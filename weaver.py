@@ -27,7 +27,7 @@ def weaver(targets, args, separate=True, leave_idle=1):
             break
     for x in range(cpus_to_use):
         try:
-            jobs.remove(jobs[x])
+            jobs.remove(jobs[0])
         except IndexError:
             break
     #

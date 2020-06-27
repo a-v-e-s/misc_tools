@@ -5,7 +5,7 @@ def get_cursor(path, get_db=True):
     """
     `return` a `Cursor` object for the sqlite3 database specified by "path",
     which must be a string. Also `return` a `Connection` object by default,
-    unless `get_db` is set to `False`.
+    unless `get_db == False`.
     """
 
     db = Connection(path)

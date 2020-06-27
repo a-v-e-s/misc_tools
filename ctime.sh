@@ -12,14 +12,14 @@ for fn in "${@}"; do
     fs=`df  --output=source "${fn}"  | tail -1`
     hextime=$(
         # use debugfs to get a load of information on the file
-        # and chop it up to find the creation time:
+        # and chop it up to find the creation time in hexadecimal:
         sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null | 
         grep crtime: |
         egrep -o '[0-9a-f]{8}'|
         head -1 | 
         tr 'a-f' 'A-F'
     )
-    # turn into decimal, print seconds since unix epoch:
+    # turn ctime into decimal then print seconds since unix epoch:
     crtime=`echo "ibase=16; $hextime" | bc`
     echo $crtime
 done

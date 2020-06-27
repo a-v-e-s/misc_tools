@@ -32,7 +32,7 @@ html_input = re.compile(r'<input.*?>(.*?)</form>', re.I|re.S)
 html_button = re.compile(r'<button.*?>(.*?)</button>', re.I|re.S)
 html_image = re.compile(r'<img\s.*?src=["|\'](.+?)["|\'].*?>')
 
-profanity = re.compile(r'\b\w*?(shit|piss|fuck|cunt|cocksucker|tit|fag|nig|ass|dick|bitch|whore|slut)\w*?\b', re.I)
+profanity = re.compile(r'\b\w*?(shit|piss|fuck|cunt|twat|cocksucker|tit|fag|nig|ass|dick|bitch|whore|slut)\w*?\b', re.I)
 
 #def near(word1, word2, max_distance):
 #    num = str(max_distance)
