@@ -1,9 +1,16 @@
+# This is really more of a rubric for an interactive
+# python session to scrape the song and artist names
+# from playlists on my Premium Pandora account
+# because I have dozens of playlists and thousands of
+# songs on them.
+
+
 import time, random, pickle
 from selenium import webdriver
 
 #
 SLEEP_LIMIT = 4
-PANDORA = 'https://pandora.com/'
+PANDORA = 'https://www.pandora.com/'
 #
 browser = webdriver.Chrome()
 print('Pausing for discretion...')
@@ -27,7 +34,7 @@ browser.find_element_by_name('password').send_keys(password)
 print('Pausing for discretion...')
 time.sleep(random.uniform(1, SLEEP_LIMIT))
 #
-browser.find_elements_by_tag_name('button')[3].click
+browser.find_elements_by_tag_name('button')[3].click()
 print('Pausing for discretion...')
 time.sleep(random.uniform(1, SLEEP_LIMIT))
 #
@@ -37,7 +44,7 @@ time.sleep(random.uniform(1, SLEEP_LIMIT))
 #
 master = {}
 playlist_name = input('Enter name of playlist to scrape, or "quit" to quit:\n')
-while playlist_name != 'quit': 
+while playlist_name.lower() != 'quit': 
     #
     try:
         browser.find_element_by_link_text(playlist_name).click()
