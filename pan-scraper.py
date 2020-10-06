@@ -49,6 +49,7 @@ while playlist_name.lower() != 'quit':
     try:
         browser.find_element_by_link_text(playlist_name).click()
     except Exception:
+        print("Couldn't find that one. Is it in view of the browser? Did you make a typo?")
         playlist_name = input('Enter name of playlist to scrape, or "quit" to quit:\n')
         continue
     #
