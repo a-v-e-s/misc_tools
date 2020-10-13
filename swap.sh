@@ -25,3 +25,25 @@ function date_difference {
     echo $difference
     return $difference
 }
+
+function gripper {
+    if ! [[ -f $1 ]]
+    then
+        echo "Must supply log file as first argument"
+        exit 1
+    fi
+
+    start=$(date --date=`grep "Started at" $1 | awk '{print $6 "-" $4 "-" $5 "-" $7; }' | sed 's/\.//'` +%s)
+    end=$(date --date=`grep "Terminated at" $1 | awk '{print $6 "-" $4 "-" $5 "-" $7; }' | sed 's/\.//'` +%s)
+    cpu_time=`grep "CPU time" $1 | awk '{print $4}'`
+    max_mem=`grep "Max Memory" test.txt | awk '{print $4}'`
+    walltime=$(( $end - $start ))
+    efficiency=`bc <<< "scale=2; $cpu_time / $walltime"`
+
+    echo "Job started at: `grep "Started at" $1 | awk '{print $4 "-" $5 "-" $7 " " $6 }' | sed 's/\.//'`"
+    echo "Job ended at: `grep "Terminated at" test.txt | awk '{print $4 "-" $5 "-" $7 " " $6 }' | sed 's/\.//'`"
+    echo "CPU Time: $cpu_time"
+    echo "Max Memory used: $max_mem"
+    echo "Walltime: $walltime"
+    echo "Efficiency (cpu time / wall time): $efficiency"
+}
