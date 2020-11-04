@@ -107,7 +107,7 @@ def gaia():
     print("Press <Enter> once you are logged in. I'll wait.")
     input()
 
-    browser.get('https://www.gaia.com/person/ashleigh-sergeant')
+    browser.get('https://www.gaia.com/person/ashley-turner')
 
     print('Load scroll to bottom and load more until all are loaded,\nThen press <Enter>:\n')
     input()
@@ -122,4 +122,4 @@ def gaia():
 
 if __name__ == '__main__':
     print('yer doin it wrong')
-    exit()
+    exit(1)
