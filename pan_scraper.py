@@ -107,7 +107,8 @@ def gaia():
     print("Press <Enter> once you are logged in. I'll wait.")
     input()
 
-    browser.get('https://www.gaia.com/person/ashley-turner')
+    name = input('<Enter> the name of the person, as it appears in the url:\n')
+    browser.get('https://www.gaia.com/person/' + name)
 
     print('Load scroll to bottom and load more until all are loaded,\nThen press <Enter>:\n')
     input()
@@ -115,7 +116,8 @@ def gaia():
     elems = browser.find_elements_by_xpath('//*[@href]')
     vids = [elem.get_attribute('href') for elem in elems if elem.get_attribute('href').endswith('fullplayer=feature')]
 
-    with open('/tmp/get.txt', 'w') as f:
+    output = input('<Enter> the full path to the output file here:\n')
+    with open(output, 'w') as f:
         for vid in vids:
             f.write(vid + '\n')
 
