@@ -5,8 +5,9 @@
 # songs on them.
 
 
-import time, random, pickle
+import os, time, random, pickle
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 def pandora():
     #
@@ -120,6 +121,49 @@ def gaia():
     with open(output, 'w') as f:
         for vid in vids:
             f.write(vid + '\n')
+
+
+def cc(url, target_dir):
+    PAUSE = 3
+
+    browser = webdriver.Chrome()
+    browser.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+    params = {'cmd':'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': target_dir}}
+    browser.execute("send_command", params)
+
+    browser.get(url)
+    time.sleep(PAUSE)
+    input('Please scroll to the very bottom of the page, then press <Enter>')
+    os.chdir(target_dir)
+
+    pages = browser.find_elements_by_class_name('thumb')
+    for page in pages:
+        try:
+            page.click()
+            time.sleep(PAUSE)
+        except Exception:
+            continue
+    
+    for n in range(1, len(pages)+1):
+        try:
+            browser.switch_to_window(browser.window_handles[n])
+            time.sleep(PAUSE)
+            new_dir = str(n).zfill(4)
+            os.mkdir(new_dir)
+            os.chdir(new_dir)
+            l = len(browser.find_elements_by_class_name('thumb'))
+            for i in range(l):
+                thumbs = browser.find_elements_by_class_name('thumb')
+                thumbs[i].click()
+                time.sleep(PAUSE)
+                target = browser.current_url
+                os.popen('wget ' + target)
+                browser.back()
+                time.sleep(PAUSE)
+            os.chdir('../')
+        except Exception:
+            continue
+
 
 
 if __name__ == '__main__':
