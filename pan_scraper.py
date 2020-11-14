@@ -146,11 +146,11 @@ def cc(url, target_dir):
     
     for n in range(1, len(pages)+1):
         try:
-            browser.switch_to_window(browser.window_handles[n])
-            time.sleep(PAUSE)
             new_dir = str(n).zfill(4)
             os.mkdir(new_dir)
             os.chdir(new_dir)
+            browser.switch_to_window(browser.window_handles[n])
+            time.sleep(PAUSE)
             l = len(browser.find_elements_by_class_name('thumb'))
             for i in range(l):
                 thumbs = browser.find_elements_by_class_name('thumb')
@@ -160,9 +160,10 @@ def cc(url, target_dir):
                 os.popen('wget ' + target)
                 browser.back()
                 time.sleep(PAUSE)
-            os.chdir('../')
         except Exception:
             continue
+        finally:
+            os.chdir('../')
 
 
 
