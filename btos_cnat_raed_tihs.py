@@ -6,7 +6,6 @@ A big mddile fnegir to the aoimglrtihc cohnsiresp of txet
 """
 
 import random, re, functools
-import tkinter as tk
 
 
 def parser(string):
@@ -15,6 +14,20 @@ def parser(string):
     # find the matches, build the new string
     new_string = ''
     for word in string.split():
+        # hyphenated words:
+        if '-' in word:
+            parts = word.split('-')
+            for part in parts:
+                if re.fullmatch(patt, part):
+                    new_part = scrambler(part)
+                    if part != parts[-1]:
+                        new_string += ''.join(new_part) + '-'
+                    else:
+                        new_string += ''.join(new_part) + ' '
+                else:
+                    new_string += part + ' '
+            continue
+        # otherwise...
         if re.fullmatch(patt, word):
             new_word = scrambler(word)
             new_string += ''.join(new_word) + ' '
