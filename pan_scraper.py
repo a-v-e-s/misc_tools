@@ -166,6 +166,10 @@ def cc(url, target_dir):
             os.chdir('../')
 
 
+def tulsi(url):
+    pass
+
+
 
 if __name__ == '__main__':
     print('yer doin it wrong')

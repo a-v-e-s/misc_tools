@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .idea/
 cyrillify.pkl
+__init__.py
