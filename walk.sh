@@ -1,7 +1,9 @@
 #!/bin/bash
 
-USAGE="./walk.sh [ --dotfiles ] <directory_to_walk>"
+# It's remarkably slow tbqh...
+
 MAX_ARGS=2
+USAGE="./walk.sh [ --dotfiles ] <directory_to_walk>"
 
 if [[ $# -gt "$MAX_ARGS" ]]
 then
@@ -13,10 +15,10 @@ while [[ -n $1 ]]
 do
     case "$1" in
         --dotfiles)
-            DOTFILES=true
+            DOTFILES=1
             ;;
         *)
-            if [[ -d "$1" ]]
+            if [[ -d "$1" ]] && [[ -z "target" ]]
             then
                 target="$1"
             else
@@ -37,12 +39,7 @@ function step {
     local file_count=0
     declare -a directories files
 
-    if [[ -z "$DOTFILES" ]]
-    then
-        command="ls"
-    else
-        command="ls -a"
-    fi
+    [[ -z "$DOTFILES" ]] && command="ls" || command="ls -a"
 
     for fd in `"$command"`
     do
@@ -59,9 +56,9 @@ function step {
     
     for d in "${directories[@]}"
     do
-        while read line
+        while read fn
         do
-            files[$file_count]="$line"
+            files[$file_count]="$fn"
             let file_count++
         done < <(step "$d")
 
@@ -74,6 +71,7 @@ function step {
 
     popd > /dev/null
 }
+
 
 step "$target"
 
