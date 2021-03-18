@@ -7,6 +7,7 @@
 
 import os, time, random, pickle
 from selenium import webdriver
+from sys import exc_info
 from selenium.webdriver.chrome.options import Options
 
 def pandora():
@@ -135,7 +136,7 @@ def cc(url, target_dir):
     time.sleep(PAUSE)
     input('Please scroll to the very bottom of the page, then press <Enter>')
     os.chdir(target_dir)
-
+    """
     pages = browser.find_elements_by_class_name('thumb')
     for page in pages:
         try:
@@ -164,6 +165,33 @@ def cc(url, target_dir):
             continue
         finally:
             os.chdir('../')
+    """
+    pages = browser.find_elements_by_class_name('thumb')
+    count = 0
+    for page in pages:
+        count += 1
+        page.click()
+        time.sleep(PAUSE)
+
+        new_dir = str(count).zfill(4)
+        os.mkdir(new_dir); os.chdir(new_dir)
+
+        browser.switch_to_window(browser.window_handles[1])
+        time.sleep(PAUSE)
+        l = len(browser.find_elements_by_class_name('thumb'))
+        for i in range(l):
+            thumbs = browser.find_elements_by_class_name('thumb')
+            thumbs[i].click()
+            time.sleep(PAUSE)
+            target = browser.current_url
+            os.popen('wget ' + target)
+            browser.back()
+            time.sleep(PAUSE)
+
+        browser.close()
+        time.sleep(PAUSE)
+        os.chdir('../')
+        browser.switch_to_window(browser.window_handles[0])
 
 
 def tulsi(url):
