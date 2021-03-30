@@ -124,8 +124,7 @@ def gaia():
             f.write(vid + '\n')
 
 
-def cc(url, target_dir):
-    PAUSE = 3
+def cc(url, target_dir, pause=3, index=0):
 
     browser = webdriver.Chrome()
     browser.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
@@ -133,63 +132,38 @@ def cc(url, target_dir):
     browser.execute("send_command", params)
 
     browser.get(url)
-    time.sleep(PAUSE)
+    time.sleep(pause)
     input('Please scroll to the very bottom of the page, then press <Enter>')
     os.chdir(target_dir)
-    """
-    pages = browser.find_elements_by_class_name('thumb')
-    for page in pages:
-        try:
-            page.click()
-            time.sleep(PAUSE)
-        except Exception:
-            continue
-    
-    for n in range(1, len(pages)+1):
-        try:
-            new_dir = str(n).zfill(4)
-            os.mkdir(new_dir)
-            os.chdir(new_dir)
-            browser.switch_to_window(browser.window_handles[n])
-            time.sleep(PAUSE)
-            l = len(browser.find_elements_by_class_name('thumb'))
-            for i in range(l):
-                thumbs = browser.find_elements_by_class_name('thumb')
-                thumbs[i].click()
-                time.sleep(PAUSE)
-                target = browser.current_url
-                os.popen('wget ' + target)
-                browser.back()
-                time.sleep(PAUSE)
-        except Exception:
-            continue
-        finally:
-            os.chdir('../')
-    """
-    pages = browser.find_elements_by_class_name('thumb')
-    count = 0
-    for page in pages:
-        count += 1
-        page.click()
-        time.sleep(PAUSE)
 
-        new_dir = str(count).zfill(4)
+    pages = browser.find_elements_by_class_name('thumb')
+    if index:
+        pages = pages[index:]
+    for page in pages:
+        index += 1
+        page.click()
+        time.sleep(pause)
+
+        new_dir = str(index).zfill(4)
         os.mkdir(new_dir); os.chdir(new_dir)
 
         browser.switch_to_window(browser.window_handles[1])
-        time.sleep(PAUSE)
+        time.sleep(pause)
+        # thumbs lose their reference when the browser goes to
+        # a new page and back so it needs to be this way
+        # even though it's ugly and awkward:
         l = len(browser.find_elements_by_class_name('thumb'))
         for i in range(l):
             thumbs = browser.find_elements_by_class_name('thumb')
             thumbs[i].click()
-            time.sleep(PAUSE)
+            time.sleep(pause)
             target = browser.current_url
             os.popen('wget ' + target)
             browser.back()
-            time.sleep(PAUSE)
+            time.sleep(pause)
 
         browser.close()
-        time.sleep(PAUSE)
+        time.sleep(pause)
         os.chdir('../')
         browser.switch_to_window(browser.window_handles[0])
 
@@ -200,5 +174,6 @@ def tulsi(url):
 
 
 if __name__ == '__main__':
-    print('yer doin it wrong')
+    print('this module is meant to be imported,')
+    print('not run as __main__')
     exit(1)
