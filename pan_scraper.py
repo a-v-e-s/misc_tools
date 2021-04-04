@@ -5,7 +5,7 @@
 # songs on them.
 
 
-import os, time, random, pickle
+import os, time, random, pickle, re
 from selenium import webdriver
 from sys import exc_info
 from selenium.webdriver.chrome.options import Options
@@ -137,6 +137,7 @@ def cc(url, target_dir, pause=3, index=0):
     os.chdir(target_dir)
 
     pages = browser.find_elements_by_class_name('thumb')
+    target_pattern = re.compile(r'^http.*(jpg|jpeg|png|gif|bmp|webm|webp|mp4)$', re.I)
     if index:
         pages = pages[index:]
     for page in pages:
@@ -158,8 +159,15 @@ def cc(url, target_dir, pause=3, index=0):
             thumbs[i].click()
             time.sleep(pause)
             target = browser.current_url
-            os.popen('wget ' + target)
-            browser.back()
+            if re.match(target_pattern, target):
+                os.popen('wget ' + target)
+                browser.back()
+            else:
+                try:
+                    browser.back()
+                except Exception:
+                    print(exc_info())
+                break
             time.sleep(pause)
 
         browser.close()
