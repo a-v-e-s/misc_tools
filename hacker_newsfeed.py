@@ -9,6 +9,15 @@ SUBS = [
     'python',
     'programming',
     'compsci',
+    'pwned',
+    'cyberlaws',
+    'NetworkSecurity',
+    'netsecstudents',
+    'AskNetsec',
+    'netsec',
+    'blackhat',
+    'computerforensics',
+    'Malware'
 ]
 
 
