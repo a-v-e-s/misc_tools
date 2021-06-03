@@ -34,6 +34,8 @@ html_image = re.compile(r'<img\s.*?src=["|\'](.+?)["|\'].*?>')
 
 profanity = re.compile(r'\b\w*?(shit|piss|fuck|cunt|twat|cocksucker|tit|fag|nig|ass|dick|bitch|whore|slut)\w*?\b', re.I)
 
+html_comments = re.compile(r'<!--.*?-->', re.S)
+
 #def near(word1, word2, max_distance):
 #    num = str(max_distance)
 #    return re.compile(r'\b(?:' + word1 + r'\W+(?:\w+\W+){1,' + num + r'}?' + word2 + r'|' + word2 + r'\W+(?:\w+\W+){1,' + num + r'}?' + word1 + r')\b')
