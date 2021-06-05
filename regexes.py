@@ -31,10 +31,12 @@ html_form = re.compile(r'<form.*?>(.*?)</form>', re.I|re.S)
 html_input = re.compile(r'<input.*?>(.*?)</form>', re.I|re.S)
 html_button = re.compile(r'<button.*?>(.*?)</button>', re.I|re.S)
 html_image = re.compile(r'<img\s.*?src=["|\'](.+?)["|\'].*?>')
+html_comments = re.compile(r'<!--.*?-->', re.S)
+html_hidden = re.compile(r'<.*?hidden.*?>', re.I)
+html_disabled = re.compile(r'<.*?disabled=.*?>', re.I)
 
 profanity = re.compile(r'\b\w*?(shit|piss|fuck|cunt|twat|cocksucker|tit|fag|nig|ass|dick|bitch|whore|slut)\w*?\b', re.I)
 
-html_comments = re.compile(r'<!--.*?-->', re.S)
 
 #def near(word1, word2, max_distance):
 #    num = str(max_distance)
