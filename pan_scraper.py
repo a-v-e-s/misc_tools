@@ -180,6 +180,41 @@ def tulsi(url):
     pass
 
 
+def inwo(target_dir):
+
+    from selenium.common.exceptions import NoSuchElementException
+
+    PAUSE = 4
+
+    os.chdir(target_dir)
+
+    browser = webdriver.Firefox()
+    time.sleep(PAUSE)
+    browser.get('https://www.inwocard.com/cards/')
+    time.sleep(PAUSE+2)
+
+    while True:
+        imgs = browser.find_elements_by_tag_name('img')
+        
+        for img in range(len(imgs)):
+            imgs[img].click()
+            time.sleep(PAUSE)
+            
+            card = browser.find_element_by_tag_name('img')
+            card.screenshot(browser.title+'.png')
+            browser.back()
+            time.sleep(PAUSE)
+            
+            imgs = browser.find_elements_by_tag_name('img')
+        
+        try:
+            next_button = browser.find_element_by_link_text('Next')
+            next_button.click()
+            time.sleep(PAUSE)
+        except NoSuchElementException:
+            break
+
+
 
 if __name__ == '__main__':
     print('this module is meant to be imported,')
