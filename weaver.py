@@ -2,44 +2,48 @@ from multiprocessing import Process, cpu_count
 from threading import Thread
 from time import sleep
 
-def weaver(targets, args, separate=True, leave_idle=1):
-    """
-    Documentation:
-    """
-    cpus = cpu_count()
-    cpus_to_use = cpus - leave_idle if cpus > 1 else 1
-    jobs = []
-    count = 0
-    for x in targets:
+
+def weaver(targets, args_list, simultaneous_bots=3, separate=True):
+    assert len(targets) == len(args_list)
+
+    # create bots:
+    zipp = zip(targets, args_list)
+    sleeping_bots = []
+    for z in zipp:
         if separate:
-            w = Process(target=x, args=args[count])
+            bot = Process(target=z[0], args=z[1])
         else:
-            w = Thread(target=x, args=args[count])
-        jobs.append(w)
-        count += 1
-    #
-    running_jobs = []
-    for x in range(cpus_to_use):
+            bot = Thread(target=z[0], args=z[1])
+        sleeping_bots.append(bot)
+
+    # start the appropriate number of bots:
+    running_bots = []
+    for x in range(simultaneous_bots):
         try:
-            jobs[x].start()
-            running_jobs.append(jobs[x])
+            sleeping_bots[x].start()
+            running_bots.append(sleeping_bots[x])
+            sleep(30)
         except IndexError:
             break
-    for x in range(cpus_to_use):
+    for x in range(simultaneous_bots):
         try:
-            jobs.remove(jobs[0])
+            sleeping_bots.remove(sleeping_bots[0])
         except IndexError:
             break
-    #
-    while jobs:
+
+    # cycle through running_bots,
+    # removing them as the finish and starting new ones:
+    while sleeping_bots:
         sleep(0.5)
-        for x in running_jobs:
-            if not x.is_alive():
-                running_jobs.remove(x)
-                jobs[0].start()
-                running_jobs.append(jobs[0])
-                jobs.remove(jobs[0])
+        for bot in running_bots:
+            if not bot.is_alive():
+                running_bots.remove(bot)
+                sleeping_bots[0].start()
+                running_bots.append(sleeping_bots[0])
+                sleeping_bots.remove(sleeping_bots[0])
+                sleep(10)
                 break
-    #
-    for x in running_jobs:
-        x.join()
+
+    # wait for everything to finish:
+    for bot in running_bots:
+        bot.join()
