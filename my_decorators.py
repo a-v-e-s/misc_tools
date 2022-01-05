@@ -1,4 +1,33 @@
 import time
+import threading
+import _thread
+import sys
+
+
+def exit_after(s):
+    """ decorator function to exit decorated function after s seconds: """
+    
+    def quit_function(f_name):
+        """ kill main thread, informing user that it timed out. """
+        print(f'{f_name} took too long.', file=sys.stderr)
+        sys.stderr.flush()
+        _thread.interrupt_main()
+    
+    def outer(fn):
+    
+        def inner(*args, **kwargs):
+            timer = threading.Timer(s, quit_function, args=[fn.__name__])
+            timer.start()
+            try:
+                result = fn(*args, **kwargs)
+            finally:
+                timer.cancel()
+    
+            return result
+    
+        return inner
+    
+    return outer
 
 
 def timer(f):
