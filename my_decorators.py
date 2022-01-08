@@ -31,6 +31,7 @@ def exit_after(s):
 
 
 def timer(f):
+    """ times a function """
 
     def wrapped_f(*args, **kwargs):
 
@@ -45,6 +46,7 @@ def timer(f):
 
 
 class recursive_timer:
+    """ singleton-like class-based timer decorator for recursive functions """
 
     def __init__(self, f):
         self.f = f
