@@ -4,6 +4,20 @@ import _thread
 import sys
 
 
+def count_executions_of(function):
+    
+    executions = 0
+
+    def wrapper(*args, **kwargs):
+    
+        nonlocal executions
+        executions += 1
+        function(*args, **kwargs)
+        print(f'{function.__name__} executed {executions} times!')
+    
+    return wrapper
+
+
 def exit_after(s):
     """ decorator function to exit decorated function after s seconds: """
     
