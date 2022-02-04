@@ -11,8 +11,8 @@ def count_executions_of(function):
     def wrapper(*args, **kwargs):
     
         nonlocal executions
-        executions += 1
         function(*args, **kwargs)
+        executions += 1
         print(f'{function.__name__} executed {executions} times!')
     
     return wrapper
