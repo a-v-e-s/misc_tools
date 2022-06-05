@@ -8,17 +8,16 @@ function sleep_after {
     return 1
   fi
 
-  while [[ -n `pidof "$1"` ]]; do
-    sleep 10
-  done
+  if [[ "$1" -gt 0 ]]; then # it's an integer; process id
+    while [[ -n `ps -q "$1" 2>/dev/null` ]]; do
+      sleep 10
+    done
+  else # it's a string; process name
+    while [[ -n `pidof "$1"` ]]; do
+      sleep 10
+    done
 
-  sleep 10
-
-  if [[ -n `pidof "$1"` ]]; then
-    sleep_after "$1"
-  else
-    systemctl suspend
-  fi
+  systemctl suspend
 }
 
 
